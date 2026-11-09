@@ -1,0 +1,67 @@
+[gd_scene load_steps=9 format=3 uid="uid://bhumm0oiqne3n"]
+
+[ext_resource type="Texture2D" uid="uid://bc635km0emxmo" path="res://Assets/Fire2.png" id="1_o5iid"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_toqpc"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_my8cd"]
+blend_mode = 1
+
+[sub_resource type="Gradient" id="Gradient_s3ipq"]
+offsets = PackedFloat32Array(0, 0.241645, 0.714653, 1)
+colors = PackedColorArray(1, 1, 0, 1, 1, 0.639216, 0.278431, 0.905882, 0.980392, 0.164706, 0, 0.831373, 0.980392, 0.164706, 0, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_3avm2"]
+gradient = SubResource("Gradient_s3ipq")
+
+[sub_resource type="Curve" id="Curve_nli86"]
+_data = [Vector2(0, 0.593407), 0.0, 0.0, 0, 0, Vector2(0.541667, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_1x5r0"]
+curve = SubResource("Curve_nli86")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_xu7s6"]
+lifetime_randomness = 0.65
+particle_flag_disable_z = true
+emission_shape_offset = Vector3(1, 1, 0)
+emission_shape = 1
+emission_sphere_radius = 3.88
+direction = Vector3(0, -1, 0)
+spread = 10.0
+initial_velocity_min = 30.0
+initial_velocity_max = 60.0
+gravity = Vector3(0, -50, 0)
+damping_max = 5.0
+scale_min = 0.4
+scale_max = 0.6
+scale_curve = SubResource("CurveTexture_1x5r0")
+color_ramp = SubResource("GradientTexture1D_3avm2")
+
+[node name="Fire" type="Area2D"]
+z_index = 20
+scale = Vector2(3, 3)
+collision_layer = 16
+collision_mask = 15
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_toqpc")
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="."]
+material = SubResource("CanvasItemMaterial_my8cd")
+position = Vector2(3, 2)
+rotation = -1.5708
+scale = Vector2(3, 3)
+amount = 20
+process_material = SubResource("ParticleProcessMaterial_xu7s6")
+texture = ExtResource("1_o5iid")
+randomness = 0.4
+local_coords = true
+
+[node name="Damage" type="AudioStreamPlayer2D" parent="."]
+
+[node name="Exploison" type="AudioStreamPlayer2D" parent="."]
+volume_db = 10.0
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

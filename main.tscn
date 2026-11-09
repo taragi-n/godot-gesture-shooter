@@ -1,0 +1,211 @@
+[gd_scene load_steps=13 format=3 uid="uid://bha8mmbb2v7b6"]
+
+[ext_resource type="Script" path="res://main.gd" id="1_nqfjq"]
+[ext_resource type="PackedScene" uid="uid://d2ithtt4swhwh" path="res://player.tscn" id="2_femct"]
+[ext_resource type="Texture2D" uid="uid://bqa82p8xxtisp" path="res://Assets/Background.png" id="2_jlqa5"]
+[ext_resource type="Shader" path="res://bg.gdshader" id="2_y3688"]
+[ext_resource type="PackedScene" uid="uid://ckvpwhss14xue" path="res://enemy_spawner.tscn" id="5_na5eb"]
+[ext_resource type="Script" path="res://ui_canvas.gd" id="6_omtqo"]
+[ext_resource type="PackedScene" uid="uid://b6ip0oupnqrhu" path="res://hp_display.tscn" id="7_gb64l"]
+[ext_resource type="PackedScene" uid="uid://hf1tw3kmqlij" path="res://timer_up.tscn" id="9_i3nl1"]
+[ext_resource type="FontFile" uid="uid://ccjcxjylynq38" path="res://Assets/LEMONMILK-Bold.otf" id="9_p8ng4"]
+[ext_resource type="AudioStream" uid="uid://bfxu8jnkbf2ua" path="res://Assets/MusicTheme.ogg" id="10_cyn6g"]
+[ext_resource type="AudioStream" uid="uid://b3eurpqkjr2q6" path="res://Assets/Engine.ogg" id="11_45tp3"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_o4v4h"]
+shader = ExtResource("2_y3688")
+shader_parameter/scroll_speed = Vector2(0.05, 0)
+shader_parameter/ukuran_tekstur_asli = 1100.0
+shader_parameter/gambar_tekstur = ExtResource("2_jlqa5")
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_nqfjq")
+
+[node name="Background" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_o4v4h")
+position = Vector2(630, 367)
+scale = Vector2(1.2, 1.2)
+texture = ExtResource("2_jlqa5")
+
+[node name="ColorRect" type="ColorRect" parent="Background"]
+modulate = Color(1, 1, 1, 0.470588)
+offset_left = -536.0
+offset_top = -322.0
+offset_right = 547.0
+offset_bottom = 316.0
+color = Color(0, 0, 0, 1)
+
+[node name="Player" parent="." instance=ExtResource("2_femct")]
+position = Vector2(173, 357)
+max_rotation_degrees = 7.0
+
+[node name="EnemySpawner" parent="." instance=ExtResource("5_na5eb")]
+position = Vector2(1413, 326)
+
+[node name="UI_Canvas" type="CanvasLayer" parent="."]
+script = ExtResource("6_omtqo")
+health_display_scene = ExtResource("7_gb64l")
+health_spacing = 60.0
+timer_up_scene = ExtResource("9_i3nl1")
+timer_spacing = 150.0
+
+[node name="Visual" type="Node2D" parent="UI_Canvas"]
+
+[node name="Marker2D" type="Marker2D" parent="UI_Canvas/Visual"]
+position = Vector2(78, 69)
+
+[node name="MarkerTimer" type="Marker2D" parent="UI_Canvas/Visual"]
+position = Vector2(640, 640)
+
+[node name="ScoreLabel" type="Label" parent="UI_Canvas/Visual"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = 1163.0
+offset_top = 34.0
+offset_right = 1243.0
+offset_bottom = 84.0
+grow_horizontal = 0
+pivot_offset = Vector2(40, 25)
+theme_override_constants/outline_size = 11
+theme_override_fonts/font = ExtResource("9_p8ng4")
+theme_override_font_sizes/font_size = 35
+text = "000"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StandBy_Canvas" type="CanvasLayer" parent="."]
+
+[node name="Visual" type="Node2D" parent="StandBy_Canvas"]
+
+[node name="Label" type="Label" parent="StandBy_Canvas/Visual"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 517.0
+offset_top = 243.0
+offset_right = 763.0
+offset_bottom = 353.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(123, 55)
+theme_override_fonts/font = ExtResource("9_p8ng4")
+theme_override_font_sizes/font_size = 80
+text = "SIAP?"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label2" type="Label" parent="StandBy_Canvas/Visual"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 318.0
+offset_top = 376.0
+offset_right = 962.0
+offset_bottom = 412.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(322, 18)
+theme_override_fonts/font = ExtResource("9_p8ng4")
+theme_override_font_sizes/font_size = 25
+text = "(Tekan [SPACE] untuk memulai permainan)"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GameOver_Canvas" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="Visual" type="Node2D" parent="GameOver_Canvas"]
+position = Vector2(640, 360)
+
+[node name="Label" type="Label" parent="GameOver_Canvas/Visual"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -267.0
+offset_top = -195.0
+offset_right = 267.0
+offset_bottom = -85.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(267, 55)
+theme_override_fonts/font = ExtResource("9_p8ng4")
+theme_override_font_sizes/font_size = 80
+text = "GAME OVER"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label2" type="Label" parent="GameOver_Canvas/Visual"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -371.0
+offset_top = 107.0
+offset_right = 371.0
+offset_bottom = 143.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(322, 18)
+theme_override_fonts/font = ExtResource("9_p8ng4")
+theme_override_font_sizes/font_size = 25
+text = "(Tekan [SPACE] untuk memulai ulang permainan)"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ScoreName" type="Label" parent="GameOver_Canvas/Visual"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -176.0
+offset_top = -25.0
+offset_right = -24.0
+offset_bottom = 25.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(76, 25)
+theme_override_constants/outline_size = 11
+theme_override_fonts/font = ExtResource("9_p8ng4")
+theme_override_font_sizes/font_size = 35
+text = "SCORE :"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ScoreAkhirLabel" type="Label" parent="GameOver_Canvas/Visual"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 60.0
+offset_top = -25.0
+offset_right = 140.0
+offset_bottom = 25.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(40, 25)
+theme_override_constants/outline_size = 11
+theme_override_fonts/font = ExtResource("9_p8ng4")
+theme_override_font_sizes/font_size = 35
+text = "000"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Theme" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("10_cyn6g")
+volume_db = -7.0
+autoplay = true
+
+[node name="Engine" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("11_45tp3")
+volume_db = -7.0
+autoplay = true

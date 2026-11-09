@@ -1,0 +1,161 @@
+[gd_scene load_steps=15 format=3 uid="uid://dv811te70tid6"]
+
+[ext_resource type="Script" path="res://bullet.gd" id="1_3nikp"]
+[ext_resource type="Texture2D" uid="uid://bc635km0emxmo" path="res://Assets/Fire2.png" id="2_1i2oa"]
+[ext_resource type="Texture2D" uid="uid://brx3w8u0m6u5h" path="res://Assets/Missile.png" id="2_suseg"]
+[ext_resource type="AudioStream" uid="uid://cgc20a2db2j17" path="res://Assets/Missile.mp3" id="4_glf23"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_dfuy1"]
+blend_mode = 1
+
+[sub_resource type="Gradient" id="Gradient_xnlb8"]
+offsets = PackedFloat32Array(0, 0.241645, 0.714653, 1)
+colors = PackedColorArray(1, 1, 0, 1, 1, 0.639216, 0.278431, 0.905882, 0.980392, 0.164706, 0, 0.831373, 0.980392, 0.164706, 0, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_rf4vu"]
+gradient = SubResource("Gradient_xnlb8")
+
+[sub_resource type="Curve" id="Curve_0eto0"]
+_data = [Vector2(0, 0.593407), 0.0, 0.0, 0, 0, Vector2(0.541667, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_5cxvc"]
+curve = SubResource("Curve_0eto0")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_fa5yo"]
+lifetime_randomness = 0.65
+particle_flag_disable_z = true
+emission_shape_offset = Vector3(1, 1, 0)
+emission_shape = 1
+emission_sphere_radius = 3.88
+direction = Vector3(0, -1, 0)
+spread = 10.0
+initial_velocity_min = 30.0
+initial_velocity_max = 60.0
+gravity = Vector3(0, -50, 0)
+damping_max = 5.0
+scale_min = 0.4
+scale_max = 0.6
+scale_curve = SubResource("CurveTexture_5cxvc")
+color_ramp = SubResource("GradientTexture1D_rf4vu")
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_m8slr"]
+radius = 9.0
+height = 66.0
+
+[sub_resource type="Animation" id="Animation_1d5m3"]
+resource_name = "Launch"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0.1, 0.3), Vector2(0.3, 0.3)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("GPUParticles2D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(-9, 1), Vector2(-31, 1), Vector2(-31, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_c6j8x"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0.3, 0.3)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("GPUParticles2D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-31, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rakvk"]
+_data = {
+"Launch": SubResource("Animation_1d5m3"),
+"RESET": SubResource("Animation_c6j8x")
+}
+
+[node name="Bullet" type="Area2D"]
+visibility_layer = 2
+script = ExtResource("1_3nikp")
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="."]
+material = SubResource("CanvasItemMaterial_dfuy1")
+position = Vector2(-31, 1)
+rotation = -1.5708
+amount = 15
+process_material = SubResource("ParticleProcessMaterial_fa5yo")
+texture = ExtResource("2_1i2oa")
+speed_scale = 2.0
+randomness = 0.4
+local_coords = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("2_suseg")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = -1.5708
+shape = SubResource("CapsuleShape2D_m8slr")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_rakvk")
+}
+autoplay = "Launch"
+
+[node name="Missile" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_glf23")
+autoplay = true
